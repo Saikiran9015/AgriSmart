@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSmart</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url('https://source.unsplash.com/1600x900/?greenery,farm') no-repeat center center/cover;
+            color: rgb(70, 70, 70);
+            text-align: center;
+        }
+        .container {
+            margin-top: 10vh;
+        }
+        .btn-custom {
+            background-color: green;
+            color: rgb(0, 0, 0);
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin: 5px;
+        }
+        .bold-text {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+        .logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: black;
+        }
+        p {
+            color: black;
+        }
+        .about-section {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .about-images img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .chatbox {
+            background: white;
+            color: black;
+            width: 50%;
+            margin: 20px auto;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+        .gallery img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease-in-out;
+        }
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="{% static 'images/image-removebg-preview.png' %}" alt="AgriSmart Logo" class="logo">
+        <h1 class="bold-text">Welcome to AgriSmart</h1>
+        <p>Smart Solutions for Modern Agriculture</p>
+        <div>
+            <a href="{% url 'login' %}" class="btn btn-custom">Login</a>
+            <a href="{% url 'signup' %}" class="btn btn-custom">Sign Up</a>
+            <a href="{% url 'about' %}" class="btn btn-custom">About</a>
+            <a href="{% url 'contact' %}" class="btn btn-custom">Contact</a>
+        </div>
+
+        <div class="chatbox">
+            <h3>AI Chat</h3>
+            <p>Ask our AI assistant about modern farming techniques and solutions.</p>
+            <div id="chat-messages"></div>
+            <input type="text" id="userInput" class="form-control" placeholder="Type your question...">
+            <button class="btn btn-custom mt-2" onclick="sendMessage()">Ask</button>
+        </div>
+
+        <script>
+            function sendMessage() {
+                let userMessage = document.getElementById("userInput").value.trim();
+                if (!userMessage) return;
+
+                let chatBox = document.getElementById("chat-messages");
+                chatBox.innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
+
+                fetch("/chatbot/", {
+                    method: "POST",
+                    body: JSON.stringify({ message: userMessage }),
+                    headers: { "Content-Type": "application/json" }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    chatBox.innerHTML += `<p><strong>Bot:</strong> ${data.response}</p>`;
+                    document.getElementById("userInput").value = "";
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    chatBox.innerHTML += `<p><strong>Bot:</strong> Sorry, there was an error processing your request.</p>`;
+                });
+            }
+        </script>
+
+        <div class="about-section">
+            <h2>About AgriSmart</h2>
+            <p>Our AI-driven solutions help farmers maximize productivity and sustainability.</p>
+            <div class="gallery">
+                <img src="{% static 'images/a.jpg' %}" alt="Farm Image 1">
+                <img src="{% static 'images/b.jpg' %}" alt="Farm Image 2">
+                <img src="{% static 'images/c.jpg' %}" alt="Farm Image 3">
+                <img src="{% static 'images/f.jpg' %}" alt="Tractor in Field">
+                <img src="{% static 'images/dron.png' %}" alt="Drone Technology in Farming">
+                <img src="{% static 'images/ai.png' %}" alt="AI in Agriculture">
+                <img src="{% static 'images/OIP.jpg' %}" alt="AI in Agriculture">
+                <img src="{% static 'images/ai-in-agriculture.jpg' %}" alt="AI in Agriculture">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
